@@ -1,0 +1,17 @@
+[project]
+name = "ethereum-erc-rag"
+version = "0.1.0"
+description = "Ethereum ERC RAG"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "python-frontmatter>=1.1.0",
+    "requests>=2.32.5",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=6.0.1",
+    "jupyter>=1.1.1",
+]
