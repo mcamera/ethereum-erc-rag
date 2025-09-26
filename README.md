@@ -4,7 +4,7 @@
 
 This project implements a Retrieval-Augmented Generation (RAG) system for Ethereum Request for Comments (ERC) documents. It downloads and processes ERC markdown files from the [Ethereum ERC GitHub repository](https://github.com/ethereum/ERCs), extracting structured data that can be used for AI-powered analysis and question-answering about Ethereum improvement proposals.
 
-⚠️ **This project is currently in development** and focuses on the initial data extraction phase of the RAG pipeline.
+⚠️ **This project is currently in development**
 
 ## Key Features
 
@@ -92,9 +92,9 @@ isort .
 - [x] Prepare data for search
 
 ### 🧠 Intelligent Processing for Data
-- [ ] Cut and chunk the data for better search
-- [ ] Split big documents using paragraphs and sections
-- [ ] Apply intelligent chunking with AI
+- [x] Cut and chunk the data for better search
+- [x] Split big documents using paragraphs and sections
+- [x] Apply intelligent chunking with AI
 
 ### 🔍 Add Search
 - [ ] Build lexical search for exact matches and keywords
