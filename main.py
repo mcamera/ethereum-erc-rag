@@ -34,7 +34,10 @@ def read_repo_data(repo_owner, repo_name):
         filename = file_info.filename
         filename_lower = filename.lower()
 
-        if not (filename_lower.endswith(".md")):
+        if not (
+            (filename_lower.endswith(".md"))
+            and (filename_lower.startswith("ercs-master/ercs"))
+        ):
             continue
 
         try:
