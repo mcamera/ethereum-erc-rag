@@ -4,6 +4,8 @@ import zipfile
 
 import frontmatter
 import requests
+from minsearch import Index
+from tqdm.auto import tqdm
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -120,9 +122,9 @@ def configure_google_ai():
     """
     Configure Google Generative AI with API key from environment variable.
     """
-    import google.generativeai as genai
     import os
 
+    import google.generativeai as genai
     from dotenv import load_dotenv
 
     load_dotenv()
@@ -214,6 +216,8 @@ if __name__ == "__main__":
 
     elif chunking_method == "intelligent_chunking":
         # Intelligent Chunking with LLM example
+        logger.info("Using intelligent chunking method with LLM.")
+
         genai = configure_google_ai()
 
         prompt_template = """
@@ -240,8 +244,6 @@ if __name__ == "__main__":
             ---
         """.strip()
 
-        from tqdm.auto import tqdm
-
         erc_data_chunks = []
 
         for doc in tqdm(erc_data):
@@ -261,5 +263,29 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Unknown chunking method: {chunking_method}")
 
-    logger.info("Sample chunk:")
-    logger.info(erc_data_chunks[0])
+    # Indexing with MinSearch
+    logger.info("Indexing the chunks using MinSearch...")
+    index = Index(
+        text_fields=[
+            "chunk",
+            "title",
+            "description",
+            "author",
+            "status",
+            "type",
+            "filename",
+        ],
+        keyword_fields=[],
+    )
+
+    index.fit(erc_data_chunks)
+
+    query = "What is ERC-4337?"
+    results = index.search(query)
+
+    logger.info(f"Total results found: {len(results)}")
+    logger.info("First result:")
+    if results:
+        logger.info(results[0])
+    else:
+        logger.info("No results found.")
