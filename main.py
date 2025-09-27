@@ -171,14 +171,94 @@ def intelligent_chunking(text):
     return sections
 
 
+def text_search(erc_data_chunks, query, hybrid=False):
+    from minsearch import Index
+
+    if hybrid == False:
+        logger.info("Performing text search...")
+
+    index = Index(
+        text_fields=[
+            "chunk",
+            "title",
+            "description",
+            "author",
+            "status",
+            "type",
+            "filename",
+        ],
+        keyword_fields=[],
+    )
+    index.fit(erc_data_chunks)
+
+    return index.search(query, num_results=5)
+
+
+def vector_search(erc_data_chunks, query, hybrid=False):
+    from sentence_transformers import SentenceTransformer
+    import numpy as np
+
+    from minsearch import VectorSearch
+    from tqdm.auto import tqdm
+
+    if hybrid == False:
+        logger.info("Performing vector search...")
+
+    embedding_model = SentenceTransformer("multi-qa-distilbert-cos-v1")
+
+    erc_data_embeddings = []
+
+    for d in tqdm(erc_data_chunks):
+        v = embedding_model.encode(d["chunk"])
+        erc_data_embeddings.append(v)
+
+    erc_data_embeddings = np.array(erc_data_embeddings)
+
+    vindex = VectorSearch()
+    vindex.fit(erc_data_embeddings, erc_data_chunks)
+
+    q = embedding_model.encode(query)
+
+    return vindex.search(q, num_results=5)
+
+
+def hybrid_search(erc_data_chunks, query):
+    logger.info("Performing hybrid search...")
+
+    text_results = text_search(erc_data_chunks, query, hybrid=True)
+    vector_results = vector_search(erc_data_chunks, query, hybrid=True)
+
+    # Combine and deduplicate results
+    seen_ids = set()
+    combined_results = []
+
+    for result in text_results + vector_results:
+        if result["filename"] not in seen_ids:
+            seen_ids.add(result["filename"])
+            combined_results.append(result)
+
+    return combined_results
+
+
 if __name__ == "__main__":
     repo_owner = "ethereum"
     repo_name = "ERCs"
     chunking_method = "sliding_window"  # Options: sliding_window, split_markdown_by_level, intelligent_chunking
+    search_method = "text"  # Options: text, vector, hybrid
+    query = "How to create an ERC-20 token?"
+    # max_documents = 50  # Limit for testing purposes
+    max_documents = None
 
     erc_data = read_repo_data(repo_owner, repo_name)
     logger.info(f"The data downloaded contains {len(erc_data)} documents.")
 
+    if max_documents:
+        logger.warning(
+            f"For testing purposes, we are limiting the number of documents to {max_documents}."
+        )
+        erc_data = erc_data[:max_documents]  # Limit documents for testing
+
+    # Perform chunking
     if chunking_method == "sliding_window":
         # Sliding window example
         logger.info("Using sliding window chunking method.")
@@ -263,29 +343,22 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Unknown chunking method: {chunking_method}")
 
-    # Indexing with MinSearch
-    logger.info("Indexing the chunks using MinSearch...")
-    index = Index(
-        text_fields=[
-            "chunk",
-            "title",
-            "description",
-            "author",
-            "status",
-            "type",
-            "filename",
-        ],
-        keyword_fields=[],
-    )
+    # Perform search
+    if search_method == "text":
+        results = text_search(erc_data_chunks, query)
+    elif search_method == "vector":
+        results = vector_search(erc_data_chunks, query)
+    elif search_method == "hybrid":
+        results = hybrid_search(erc_data_chunks, query)
+    else:
+        raise ValueError(f"Unknown search method: {search_method}")
 
-    index.fit(erc_data_chunks)
-
-    query = "What is ERC-4337?"
-    results = index.search(query)
+    logger.info(f"Query: {query}")
 
     logger.info(f"Total results found: {len(results)}")
-    logger.info("First result:")
+    logger.info("Printing all results:")
     if results:
-        logger.info(results[0])
+        for i, result in enumerate(results):
+            logger.info(f"Result {i + 1}: {result}")
     else:
         logger.info("No results found.")
