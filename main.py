@@ -1,10 +1,12 @@
+import asyncio
 import io
 import logging
 import zipfile
+from typing import Any, List
 
 import frontmatter
 import requests
-from minsearch import Index
+from minsearch import Index, VectorSearch
 from tqdm.auto import tqdm
 
 logging.basicConfig(level=logging.INFO)
@@ -171,11 +173,8 @@ def intelligent_chunking(text):
     return sections
 
 
-def text_search(erc_data_chunks, query, hybrid=False):
+def index_data(erc_data_chunks):
     from minsearch import Index
-
-    if hybrid == False:
-        logger.info("Performing text search...")
 
     index = Index(
         text_fields=[
@@ -189,20 +188,25 @@ def text_search(erc_data_chunks, query, hybrid=False):
         ],
         keyword_fields=[],
     )
-    index.fit(erc_data_chunks)
+    return index.fit(erc_data_chunks)
 
+
+def text_search(query: str) -> List[Any]:
+    """
+    Perform a text-based search on the Ethereum ERC index.
+
+    Args:
+        query (str): The search query string.
+
+    Returns:
+        List[Any]: A list of up to 5 search results returned by the Ethereum ERC index.
+    """
     return index.search(query, num_results=5)
 
 
-def vector_search(erc_data_chunks, query, hybrid=False):
-    from sentence_transformers import SentenceTransformer
+def vector_search(query):
     import numpy as np
-
-    from minsearch import VectorSearch
-    from tqdm.auto import tqdm
-
-    if hybrid == False:
-        logger.info("Performing vector search...")
+    from sentence_transformers import SentenceTransformer
 
     embedding_model = SentenceTransformer("multi-qa-distilbert-cos-v1")
 
@@ -222,11 +226,9 @@ def vector_search(erc_data_chunks, query, hybrid=False):
     return vindex.search(q, num_results=5)
 
 
-def hybrid_search(erc_data_chunks, query):
-    logger.info("Performing hybrid search...")
-
-    text_results = text_search(erc_data_chunks, query, hybrid=True)
-    vector_results = vector_search(erc_data_chunks, query, hybrid=True)
+def hybrid_search(query):
+    text_results = text_search(query)
+    vector_results = vector_search(query)
 
     # Combine and deduplicate results
     seen_ids = set()
@@ -240,14 +242,33 @@ def hybrid_search(erc_data_chunks, query):
     return combined_results
 
 
+def create_agent(system_prompt: str, text_search: callable):
+    from pydantic_ai import Agent
+
+    return Agent(
+        name="ethereum_agent",
+        instructions=system_prompt,
+        tools=[text_search],
+        model="gemini-2.5-flash",
+    )
+
+
 if __name__ == "__main__":
     repo_owner = "ethereum"
     repo_name = "ERCs"
     chunking_method = "sliding_window"  # Options: sliding_window, split_markdown_by_level, intelligent_chunking
     search_method = "text"  # Options: text, vector, hybrid
-    query = "How to create an ERC-20 token?"
-    # max_documents = 50  # Limit for testing purposes
-    max_documents = None
+    query = "How to create a token on Ethereum blockchain?"
+    max_documents = None  # Limit for testing purposes
+    system_prompt = """
+        You are an expert in Computer Science and Distributed Ledger Technology, 
+        with an emphasis on the Ethereum blockchain.
+
+        Use the reference material to answer the questions.
+
+        If the search does not return relevant results, inform the user and provide
+        general guidance.
+    """
 
     erc_data = read_repo_data(repo_owner, repo_name)
     logger.info(f"The data downloaded contains {len(erc_data)} documents.")
@@ -344,21 +365,36 @@ if __name__ == "__main__":
         raise ValueError(f"Unknown chunking method: {chunking_method}")
 
     # Perform search
+
     if search_method == "text":
-        results = text_search(erc_data_chunks, query)
+        logger.info("Performing text search...")
+        global index
+        index = index_data(erc_data_chunks)
+        results = text_search(query)
     elif search_method == "vector":
-        results = vector_search(erc_data_chunks, query)
+        logger.info("Performing vector search...")
+        results = vector_search(query)
     elif search_method == "hybrid":
-        results = hybrid_search(erc_data_chunks, query)
+        logger.info("Performing hybrid search...")
+        results = hybrid_search(query)
     else:
         raise ValueError(f"Unknown search method: {search_method}")
 
-    logger.info(f"Query: {query}")
+    # Debug output of search results
+    # logger.info(f"Total results found: {len(results)}")
+    # logger.info("Printing all results:")
+    # if results:
+    #     for i, result in enumerate(results):
+    #         logger.info(f"Result {i + 1}: {result}")
+    # else:
+    #     logger.info("No results found.")
 
-    logger.info(f"Total results found: {len(results)}")
-    logger.info("Printing all results:")
-    if results:
-        for i, result in enumerate(results):
-            logger.info(f"Result {i + 1}: {result}")
-    else:
-        logger.info("No results found.")
+    agent = create_agent(system_prompt, text_search)
+
+    result = asyncio.run(agent.run(user_prompt=query))
+
+    print("#" * 50)
+    print(f"Query: {query}")
+    print("#" * 50)
+    print(result.output)
+    print("Agent run completed.")
