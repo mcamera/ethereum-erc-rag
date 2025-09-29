@@ -15,6 +15,10 @@ from minsearch import Index
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Suppress verbose logs from external libraries
+logging.getLogger("google_genai.models").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("google.generativeai").setLevel(logging.WARNING)
 
 def read_repo_data(repo_owner: str, repo_name: str) -> list[dict]:
     """
