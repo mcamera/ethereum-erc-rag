@@ -1,7 +1,7 @@
 import json
 import os
 import secrets
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 from pydantic_ai.messages import ModelMessagesTypeAdapter
@@ -44,7 +44,7 @@ def serializer(obj):
     """ "
     JSON serializer for objects not serializable by default.
     """
-    if isinstance(obj, datetime):
+    if isinstance(obj, (datetime, date)):
         return obj.isoformat()
     raise TypeError(f"Type {type(obj)} not serializable")
 
