@@ -130,7 +130,7 @@ def index_data(
     repo_owner: str,
     repo_name: str,
     filter=None,
-    chunk=False,
+    chunk=True,
     chunking_params=None,
 ):
     """
