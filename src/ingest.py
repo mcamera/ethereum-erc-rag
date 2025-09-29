@@ -158,28 +158,10 @@ def index_data(
         docs = chunk_documents(docs, **chunking_params)
 
     index = Index(
-        text_fields=["content", "filename"],
+        text_fields=["content", "filename", "title", "author", "status", "type"],
     )
 
     index.fit(docs)
     logger.info("Fitting index completed.")
 
     return index
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-
-    repo_owner = "ethereum"
-    repo_name = "ERCs"
-
-    index = index_data(
-        repo_owner=repo_owner,
-        repo_name=repo_name,
-        filter=None,
-        chunk=True,
-        chunking_params={"size": 2000, "step": 1000},
-    )
-
-    print(index)
