@@ -23,7 +23,7 @@ SYSTEM_PROMPT_TEMPLATE = """
  """
 
 
-def init_agent(index: search_tools.Index, repo_owner: str, repo_name: str) -> Agent:
+def init_agent(index, repo_owner: str, repo_name: str) -> Agent:
     """
     Initialize the search agent with the given index and repository information.
     """
