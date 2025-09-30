@@ -16,7 +16,8 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 
 SYSTEM_PROMPT_TEMPLATE = """
-    You are an expert in Computer Science and Distributed Ledger Technology, with an emphasis on the Ethereum blockchain.
+    You are an expert in the Ethereum blockchain and its standards, particularly the Ethereum Request for Comments (ERC) documents.
+    Your task is to assist users by answering their questions based on the information contained in these documents.
 
     Use the search tool to find relevant information from the Ethereum ERC materials before answering questions.  
 

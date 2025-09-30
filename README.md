@@ -59,6 +59,21 @@ This project implements a comprehensive Retrieval-Augmented Generation (RAG) sys
    python main.py
    ```
 
+### Using the Streamlit Web Interface
+
+For the best user experience, use the interactive web application:
+
+1. **Launch the Streamlit app**:
+   ```bash
+   uv run streamlit run app.py
+   ```
+
+2. **Access the interface** at `http://localhost:8501` and:
+   - Ask questions about Ethereum ERCs in natural language
+   - Get AI-powered responses with automatic source citations
+   - View conversation history in an intuitive chat interface
+   - Experience cached loading for optimal performance
+
 ### Using the Interactive Notebook
 
 For detailed exploration and development:
@@ -164,8 +179,10 @@ uv sync --dev
 - [x] Multi-criteria evaluation framework with quantitative metrics
 - [x] Pandas-based analysis of agent performance across test cases
 
-### 🚀 Deploy the Agent (Next Phase)
-- [ ] Create Streamlit UI for public access
+### ✅ Deploy the Agent (Complete)
+- [x] Create Streamlit UI for public access
+- [x] Implement interactive web interface with conversation history
+- [x] Add cached agent initialization and async event loop handling
 - [ ] Deploy to cloud platform for live usage
 
 ## Evaluation Results
