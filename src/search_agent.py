@@ -2,9 +2,18 @@
 Module to initialize and configure the search agent.
 """
 
+import os
+
+from dotenv import load_dotenv
 from pydantic_ai import Agent
 
-import search_tools
+from src import search_tools
+
+
+load_dotenv()
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
 
 SYSTEM_PROMPT_TEMPLATE = """
     You are an expert in Computer Science and Distributed Ledger Technology, with an emphasis on the Ethereum blockchain.
