@@ -1,20 +1,26 @@
 # Ethereum Request for Comments (ERCs) AI Agent
 
+[![GitHub stars](https://img.shields.io/github/stars/mcamera/ethereum-erc-rag?style=social)](https://github.com/mcamera/ethereum-erc-rag/stargazers)
+[![GitHub license](https://img.shields.io/github/license/mcamera/ethereum-erc-rag)](https://github.com/mcamera/ethereum-erc-rag/blob/main/LICENSE)
+[![Python version](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ethereum-ercs.streamlit.app/)
+
 ## Project Overview
 
-This project implements a comprehensive Retrieval-Augmented Generation (RAG) system for Ethereum Request for Comments (ERC) documents. It downloads and processes ERC markdown files from the [Ethereum ERC GitHub repository](https://github.com/ethereum/ERCs), extracting structured data that can be used for AI-powered analysis and question-answering about Ethereum improvement proposals.
+This project implements a comprehensive Retrieval-Augmented Generation (RAG) system for Ethereum Request for Comments (ERC) documents. It downloads and processes ERC markdown files from the [Ethereum ERC GitHub repository](https://github.com/ethereum/ERCs), creating an intelligent AI assistant that can answer questions about Ethereum improvement proposals through natural language interaction.
 
-⚠️ **This project is currently in development**
+**🚀 Live Demo**: [https://ethereum-ercs.streamlit.app/](https://ethereum-ercs.streamlit.app/)
 
 ## Key Features
 
-- 🔄 **Automated Repository Scraping**: Downloads and extracts markdown files from the Ethereum GitHub repository using `read_repo_data`
+- 🌐 **Live Web Interface**: Interactive Streamlit application deployed and accessible online
+- 🔄 **Automated Repository Scraping**: Downloads and extracts markdown files from the Ethereum GitHub repository
 - 📄 **Frontmatter Processing**: Parses YAML frontmatter from markdown files for structured metadata
 - 🧠 **Intelligent Document Processing**: Multiple chunking strategies including sliding window, section-based splitting, and AI-powered intelligent chunking
 - 🔍 **Hybrid Search Engine**: Combines lexical search (MinSearch) with vector search (sentence transformers) for optimal retrieval
 - 🤖 **Pydantic AI Agent**: Implements an intelligent agent with tool calling capabilities for ERC Q&A
 - 📊 **Comprehensive Evaluation**: LLM-as-a-judge evaluation system with structured assessment criteria
-- 🛠️ **Interactive Development**: Full Jupyter notebook implementation with detailed analysis and experimentation
+- � **Conversational Interface**: Natural language Q&A with automatic source citations and GitHub links
 
 ## Requirements
 
@@ -43,32 +49,46 @@ This project implements a comprehensive Retrieval-Augmented Generation (RAG) sys
 
 ## Usage
 
-### Running the Main Script
+### Using the Command Line Interface
 
-1. **Configure the system** in `main.py`:
-   ```python
-   repo_owner = "ethereum"
-   repo_name = "ERCs"
-   chunking_method = "sliding_window"  # Options: sliding_window, split_markdown_by_level, intelligent_chunking
-   search_method = "text"  # Options: text, vector, hybrid
-   query = "What is ERC-4337?"  # Your question
+For direct interaction through the terminal:
+
+1. **Run the interactive CLI**:
+   ```bash
+   python -m src.main
    ```
 
-2. **Run the conversational agent**:
-   ```bash
-   python main.py
+2. **How it works**:
+   - The system will automatically download and index the Ethereum ERCs repository
+   - Once initialized, you can ask questions in natural language
+   - Type your questions and press Enter to get responses
+   - Type 'stop' to exit the program
+
+3. **Example interaction**:
+   ```
+   Your question: What is ERC-20?
+   Response: [AI response with citations]
+   
+   Your question: How does ERC-721 differ from ERC-20?
+   Response: [AI response comparing the standards]
+   
+   Your question: stop
+   Goodbye!
    ```
 
 ### Using the Streamlit Web Interface
 
 For the best user experience, use the interactive web application:
 
-1. **Launch the Streamlit app**:
+1. **Try the live app**: [https://ethereum-ercs.streamlit.app/](https://ethereum-ercs.streamlit.app/)
+
+2. **Or run locally**:
    ```bash
    uv run streamlit run app.py
    ```
+   Then access at `http://localhost:8501`
 
-2. **Access the interface** at `http://localhost:8501` and:
+3. **Features available**:
    - Ask questions about Ethereum ERCs in natural language
    - Get AI-powered responses with automatic source citations
    - View conversation history in an intuitive chat interface
@@ -83,7 +103,7 @@ For detailed exploration and development:
    uv run jupyter notebook
    ```
 
-2. **Open** `ai_agent_notebook.ipynb` and explore:
+2. **Open** `docs/ai_agent_notebook.ipynb` and explore:
    - Document ingestion and processing pipeline
    - Comparison of chunking strategies (sliding window vs. section-based vs. AI-powered)
    - Search implementation (lexical, vector, hybrid)
@@ -151,39 +171,39 @@ uv sync --dev
 
 ## Development Roadmap
 
-### ✅ Ingest and Index the Data (Complete)
+### ✅ Day 1: Ingest and Index the Data (Complete)
 - [x] Fetch GitHub repository content
 - [x] Extract and parse markdown documentation
 - [x] Prepare data for search
 
-### ✅ Intelligent Processing for Data (Complete)
+### ✅ Day 2: Intelligent Processing for Data (Complete)
 - [x] Cut and chunk the data for better search
 - [x] Split big documents using paragraphs and sections
 - [x] Apply intelligent chunking with AI
 
-### ✅ Add Search (Complete)
+### ✅ Day 3: Add Search (Complete)
 - [x] Lexical search with MinSearch for keyword matching
 - [x] Semantic search with sentence transformers
 - [x] Hybrid search combining both approaches with result deduplication
 
-### ✅ Agentic Search (Complete)
+### ✅ Day 4: Agentic Search (Complete)
 - [x] Implement RAG with Pydantic AI Agent
 - [x] Define search tools for the agent
 - [x] Create intelligent ERC documentation assistant with citation support
 - [x] Build conversational interface with structured responses
 
-### ✅ Offline Evaluation and Testing (Complete)
+### ✅ Day 5: Offline Evaluation and Testing (Complete)
 - [x] Comprehensive logging system
 - [x] LLM-as-a-judge evaluation
 - [x] Automated question generation for systematic testing
 - [x] Multi-criteria evaluation framework with quantitative metrics
 - [x] Pandas-based analysis of agent performance across test cases
 
-### ✅ Deploy the Agent (Complete)
+### ✅ Day 6: Deploy the Agent (Complete)
 - [x] Create Streamlit UI for public access
 - [x] Implement interactive web interface with conversation history
 - [x] Add cached agent initialization and async event loop handling
-- [ ] Deploy to cloud platform for live usage
+- [x] Deploy to cloud platform for live usage
 
 ## Evaluation Results
 

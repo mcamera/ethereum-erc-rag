@@ -1,6 +1,6 @@
-import ingest
-import search_agent
-import logs
+from . import ingest
+from . import search_agent
+from . import logs
 
 import asyncio
 
