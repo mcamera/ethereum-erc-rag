@@ -5,6 +5,8 @@
 [![Python version](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ethereum-ercs.streamlit.app/)
 
+![WEB](images/streamlit-app-clip.gif)
+
 ## Project Overview
 
 This project implements a comprehensive Retrieval-Augmented Generation (RAG) system for Ethereum Request for Comments (ERC) documents. It downloads and processes ERC markdown files from the [Ethereum ERC GitHub repository](https://github.com/ethereum/ERCs), creating an intelligent AI assistant that can answer questions about Ethereum improvement proposals through natural language interaction.
@@ -24,7 +26,7 @@ This project implements a comprehensive Retrieval-Augmented Generation (RAG) sys
 
 ## Requirements
 
-- Python 3.13+
+- python 3.13+
 - Dependencies managed with `uv` package manager
 - Google AI API key (for Gemini models)
 
@@ -55,8 +57,10 @@ For direct interaction through the terminal:
 
 1. **Run the interactive CLI**:
    ```bash
-   python -m src.main
+   python3 -m src.main
    ```
+
+![CLI](images/cli-app-clip.gif)
 
 2. **How it works**:
    - The system will automatically download and index the Ethereum ERCs repository
@@ -118,7 +122,7 @@ The project includes a comprehensive evaluation framework to assess the AI agent
 
 1. **Create evaluation questions and answers**:
    ```bash
-   python -m eval.data_generation
+   python3 -m eval.data_generation
    ```
 
 2. **What it does**:
@@ -131,7 +135,7 @@ The project includes a comprehensive evaluation framework to assess the AI agent
 
 1. **Evaluate logged interactions**:
    ```bash
-   python -m eval.evaluations
+   python3 -m eval.evaluations
    ```
 
 2. **What it analyzes**:
