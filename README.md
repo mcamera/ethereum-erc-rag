@@ -110,6 +110,36 @@ For detailed exploration and development:
    - Agent development with Pydantic AI
    - Comprehensive evaluation and testing framework
 
+## Running Evaluations
+
+The project includes a comprehensive evaluation framework to assess the AI agent's performance:
+
+### Generate Test Data
+
+1. **Create evaluation questions and answers**:
+   ```bash
+   python -m eval.data_generation
+   ```
+
+2. **What it does**:
+   - Samples 10 random documents from the indexed ERCs
+   - Generates realistic questions using AI
+   - Gets answers from the agent for each question
+   - Logs all interactions to `eval_logs/` directory
+
+### Run Evaluation Analysis
+
+1. **Evaluate logged interactions**:
+   ```bash
+   python -m eval.evaluations
+   ```
+
+2. **What it analyzes**:
+   - Instructions adherence and avoidance patterns
+   - Answer relevance, clarity, and completeness
+   - Citation accuracy and tool usage verification
+   - Generates quantitative performance metrics
+
 ## Architecture
 
 ### Document Processing Pipeline
@@ -215,7 +245,15 @@ The system demonstrates strong performance across evaluation criteria:
 - **Completeness**: Comprehensive coverage of technical topics
 - **Tool Usage**: Effective search tool invocation for information retrieval
 
-Performance metrics are tracked quantitatively using the pandas-based evaluation framework.
+**Results:**
+
+![Evaluation Results](images/eval.jpg)
+
+
+**Evaluation Summary**
+The agent achieved excellent performance with an average score of 91.4% across all metrics. Perfect scores (100%) were attained in instructions adherence, answer relevance, answer clarity, and search tool usage, demonstrating the system's reliability and accuracy.
+
+Areas with 80% scores (instructions follow, citations, and completeness) indicate strong performance with room for minor improvements. These results validate the effectiveness of the RAG architecture and hybrid search approach for Ethereum documentation assistance.
 
 ## Technical Stack
 
