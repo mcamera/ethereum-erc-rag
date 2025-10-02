@@ -173,15 +173,6 @@ The project includes a comprehensive evaluation framework to assess the AI agent
 - **Test Generation**: AI-powered question generation from real ERC content
 - **Quantitative Analysis**: Pandas-based statistical evaluation of agent performance
 
-## Output Format
-
-The system processes ERC documents into structured format with:
-- `content`: The markdown content of the file
-- `metadata`: Parsed YAML frontmatter (title, author, status, type, etc.)
-- `filename`: Original file path in the repository
-- `chunk`/`section`: Processed content segments optimized for search
-- `start`: Position indicators for sliding window chunks
-
 ## Development
 
 This project uses modern Python development practices:
